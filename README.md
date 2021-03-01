@@ -17,7 +17,8 @@ This application will run inside [Azure Web App Services](https://azure.microsof
 3. Create a another app service  with PHP support and push the code inside FrontEnd to Azure.
 
 
-
+> https://phpflask.azurewebsites.net
+> https://pyflask2.azurewebsites.net/voting?questionid=48d75c359ce4
 
 
 
