@@ -2,8 +2,9 @@
 <html>
 
 <head>
+
   <meta charset="utf-8">
-  <title>ZingSoft Demo</title>
+  <title>Voting Results</title>
 
   <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
   <style>
@@ -20,18 +21,34 @@
       margin: 0 auto;
     }
   </style>
+
 </head>
 
 <body>
   <div id="chart-one"></div>
   <script>
+  
     const fetchParams = {
       method: "GET",
       mode: "cors",
       cache: "default"
     };
+	
+	function getQueryString() {
+  var result = {}, queryString = location.search.slice(1),
+      re = /([^&=]+)=([^&]*)/g, m;
 
-    const url = "https://app-serve-flask2.azurewebsites.net/48d75c359ce4";
+  while (m = re.exec(queryString)) {
+    result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+
+  return result;
+}
+
+
+	var voteId = getQueryString()["VoteID"];
+	
+    const url = "https://pyflask2.azurewebsites.net/voting?questionid="+voteId;
 	
 
     fetch(url, fetchParams)
@@ -45,12 +62,12 @@
         const characters = data.results;
         let characterData = [];
         characters.forEach(function(character) {
-          characterData.push([character.label, parseInt(character.score)]);
+          characterData.push([character.label, parseInt(character.score[0])]);
         });
         const chartOneData = {
           type: "bar",
           title: {
-            text: data.type,
+            text: data.question,
             adjustLayout: true
           },
           tooltip: {
@@ -87,6 +104,12 @@
         console.log("Error Getting Data From Star Wars API");
       });
   </script>
+   <button onclick="goBack()">Go Back</button>
+ <script>
+	function goBack() {
+	window.history.back();
+	}
+</script>
 </body>
 
 </html>
