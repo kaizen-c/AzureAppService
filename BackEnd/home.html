@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>ZingSoft Demo</title>
+
+  <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #chart-one {
+      height: 75%;
+      width: 80%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chart-one"></div>
+  <script>
+    const fetchParams = {
+      method: "GET",
+      mode: "cors",
+      cache: "default"
+    };
+
+    const url = "https://app-serve-flask2.azurewebsites.net/48d75c359ce4";
+	
+
+    fetch(url, fetchParams)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        return res.json();
+      })
+      .then(data => {
+        const characters = data.results;
+        let characterData = [];
+        characters.forEach(function(character) {
+          characterData.push([character.label, parseInt(character.score)]);
+        });
+        const chartOneData = {
+          type: "bar",
+          title: {
+            text: data.type,
+            adjustLayout: true
+          },
+          tooltip: {
+            text: 'Name: %kt<br>Votes: %vv'
+          },
+          scaleX: {
+            label: {
+              text: 'Products'
+            },
+            item: {
+              angle: '-45'
+            }
+          },
+          scaleY: {
+            label: {
+              text: 'Votes'
+            }
+          },
+          series: [{
+            values: characterData
+          }],
+          plotarea: {
+            margin: 'dynamic'
+          }
+        };
+        zingchart.render({
+          id: "chart-one",
+          data: chartOneData,
+          height: "100%",
+          width: "100%"
+        });
+      })
+      .catch(err => {
+        console.log("Error Getting Data From Star Wars API");
+      });
+  </script>
+</body>
+
+</html>
